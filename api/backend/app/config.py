@@ -1,6 +1,7 @@
 from loguru import logger
 from typing import Any, Dict, List, Optional, Union
-from pydantic import BaseSettings, PostgresDsn, validator
+from pydantic import PostgresDsn, validator
+from pydantic_settings import BaseSettings
 from dotenv import load_dotenv
 
 log = logger
@@ -14,7 +15,7 @@ class Settings(BaseSettings):
     BACKEND_CORS_ORIGINS: List[str] = ["*"]
     SECRET_KEY: str
     HUNTER_API: str
-    HUNTER_URI: str = 'https://api.hunter.io/v2/email-verifier'
+    HUNTER_URI: str = "https://api.hunter.io/v2/email-verifier"
 
     @validator("BACKEND_CORS_ORIGINS", pre=True)
     def assemble_cors_origins(cls, v: Union[str, List[str]]) -> Union[List[str], str]:
@@ -36,19 +37,13 @@ class Settings(BaseSettings):
         if isinstance(v, str):
             return v
 
-        return PostgresDsn.build(
-            scheme="postgresql+psycopg2",
-            user=values.get("POSTGRES_USER"),
-            password=values.get("POSTGRES_PASSWORD"),
-            host=str(values.get("POSTGRES_HOST"))
-            if values.get("POSTGRES_HOST")
-            else "127.0.0.1",
-            port=str(values.get("POSTGRES_PORT")),
-            path=f"/{values.get('POSTGRES_DB') or ''}",
+        return (
+            f'postgresql+psycopg2://{values["POSTGRES_USER"]}:{values["POSTGRES_PASSWORD"]}@'
+            f'{values["POSTGRES_HOST"]}:{values["POSTGRES_PORT"]}/{values["POSTGRES_DB"]}'
         )
 
-    ALGORITHM = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES = 30
+    ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
     class Config:
         case_sensitive = True

@@ -24,7 +24,7 @@ def connect_db():
         )
     except Exception as e:
         log.error(e)
-        log.info(f's = {str(settings.DATABASE_URI)}')
+        log.info(f"s = {str(settings.DATABASE_URI)}")
     Base.metadata.bind = engine
     SessionLocal = sessionmaker(bind=engine)
 

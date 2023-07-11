@@ -9,9 +9,9 @@ Base = declarative_base()
 class User(Base):
     __tablename__ = "user"
     id = Column(Integer, primary_key=True)
-    name = Column(String(20), nullable=False)
+    username = Column(String(20), nullable=False)
     email = Column(String(50), nullable=False)
-    hashed_password = Column(String(50), nullable=False)
+    hashed_password = Column(String(100), nullable=False)
     created_at = Column(DateTime, default=datetime.now())
 
 
