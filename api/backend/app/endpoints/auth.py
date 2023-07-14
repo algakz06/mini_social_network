@@ -43,10 +43,13 @@ async def create_user(
 
 @router.post("/token", response_model=response_schemas.Token)
 async def login_for_access_token(
-    user_data: request_schemas.UserLogin,
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     db: Session = Depends(get_db),
 ):
-    user = authenticate_user(db, user_data.email, user_data.password)
+    """
+    we use username in OAuth2PasswordRequestForm as email
+    """
+    user = authenticate_user(db, form_data.username, form_data.password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -55,6 +58,6 @@ async def login_for_access_token(
         )
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
+        data={"email": user.email}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}

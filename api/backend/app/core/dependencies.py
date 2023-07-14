@@ -19,6 +19,6 @@ def get_db():
 # region password
 
 pwd_context = CryptContext(schemes=["bcrypt"])
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/user/token")
 
 # endregion

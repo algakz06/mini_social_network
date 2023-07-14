@@ -32,7 +32,7 @@ class ReactionType(enum.Enum):
 class Reaction(Base):
     __tablename__ = "reaction"
     id = Column(Integer, primary_key=True)
-    type = Column(Enum(ReactionType), nullable=False)
+    reaction_type = Column(Enum(ReactionType), nullable=False)
     user_id = Column(Integer, ForeignKey("user.id"))
     post_id = Column(Integer, ForeignKey("post.id"))
     created_at = Column(DateTime, default=datetime.now())

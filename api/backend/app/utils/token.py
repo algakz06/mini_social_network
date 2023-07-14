@@ -1,6 +1,6 @@
 from app.core import crud
 from app.config import settings
-from app.core.dependencies import pwd_context, oauth2_scheme
+from app.core.dependencies import pwd_context, oauth2_scheme, get_db
 from app.schemas.response_schemas import TokenData, User
 from app.config import log
 
@@ -42,17 +42,22 @@ def authenticate_user(db: Session, email: str, password: str):
     return user
 
 
-async def get_current_user(db: Session, token: Annotated[str, Depends(oauth2_scheme)]):
+async def get_current_user(
+        token: Annotated[str, Depends(oauth2_scheme)],
+        db: Session = Depends(get_db),
+):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
+    log.info(f'Getting current user from token {token}')
     try:
         payload = jwt.decode(
             token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
         )
-        email: str = payload.get("sub")
+        log.info(f'{payload}')
+        email: str = payload.get("email")
         if email is None:
             raise credentials_exception
         token_data = TokenData(email=email)
@@ -61,6 +66,12 @@ async def get_current_user(db: Session, token: Annotated[str, Depends(oauth2_sch
     user = crud.get_user(db, email=token_data.email)
     if user is None:
         raise credentials_exception
+    user = User(
+        id=user.id,
+        username=user.username,
+        email=user.email,
+        disabled=False
+    )
     return user
 
 

@@ -1,6 +1,8 @@
 from fastapi import APIRouter
 
 from app.endpoints.auth import router as auth_router
+from app.endpoints.posts import router as posts_router
+from app.endpoints.reactinos import router as reactions_router
 
 
 router = APIRouter(
@@ -9,3 +11,5 @@ router = APIRouter(
 )
 
 router.include_router(auth_router)
+router.include_router(posts_router)
+router.include_router(reactions_router)
