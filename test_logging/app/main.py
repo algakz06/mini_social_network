@@ -1,4 +1,7 @@
 import aiohttp
+import unittest
+import asyncio
+from unittest.mock import patch, call
 
 
 async def logs(cont, name):
