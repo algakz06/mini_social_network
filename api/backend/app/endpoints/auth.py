@@ -15,6 +15,7 @@ from app.utils.token import (
     authenticate_user,
     create_access_token,
 )
+from app.utils.email import verify_email
 
 router = APIRouter(
     prefix="/user",
@@ -36,6 +37,14 @@ async def create_user(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Email already registered",
+        )
+
+    is_valid_email = verify_email(user.email)
+
+    if not is_valid_email:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email is not valid",
         )
 
     return crud.create_user(db=db, user=user)

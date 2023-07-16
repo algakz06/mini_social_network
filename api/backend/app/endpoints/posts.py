@@ -9,6 +9,10 @@ from app.core import crud
 from app.config import settings
 from app.utils.token import get_current_active_user
 
+from fastapi_cache.decorator import cache
+
+import time
+
 router = APIRouter(
     prefix="/posts",
     tags=["posts"],
@@ -16,6 +20,7 @@ router = APIRouter(
 
 
 @router.get("/all", response_model=response_schemas.AllPosts)
+@cache(expire=settings.CACHE_EXPIRE)
 async def get_posts(
     current_user: response_schemas.User = Depends(get_current_active_user),
     db: Session = Depends(get_db),
@@ -24,6 +29,8 @@ async def get_posts(
     Get all posts
     """
     posts = crud.get_all_posts(db=db)
+
+    time.sleep(3)
 
     if posts is None:
         raise HTTPException(

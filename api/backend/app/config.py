@@ -32,6 +32,9 @@ class Settings(BaseSettings):
     POSTGRES_DB: str
     DATABASE_URI: Optional[PostgresDsn] = None
 
+    REDIS_URI: str = 'redis://redis:6379'
+    CACHE_EXPIRE: int = 30
+
     @validator("DATABASE_URI", pre=True)
     def assemble_db_connection(cls, v: Optional[str], values: Dict[str, Any]) -> Any:
         if isinstance(v, str):

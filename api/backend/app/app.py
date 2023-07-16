@@ -1,8 +1,14 @@
 from app.config import log
 from app.core.database import init_db
+from app.config import settings
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
+from fastapi_cache import FastAPICache
+from fastapi_cache.backends.redis import RedisBackend
+
+from redis import asyncio as aioredis
 
 
 async def startup():
@@ -11,6 +17,9 @@ async def startup():
     except Exception as ex:
         log.exception(f"failed to preparedb {ex}")
         pass
+
+    redis = aioredis.from_url(settings.REDIS_URI)
+    FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
 
 
 async def shutdown():

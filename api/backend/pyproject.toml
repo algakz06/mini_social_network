@@ -17,6 +17,9 @@ psycopg2-binary = "^2.9.6"
 pydantic-settings = "^2.0.1"
 pydantic = {extras = ["email"], version = "^2.0.2"}
 python-multipart = "^0.0.6"
+requests = "^2.31.0"
+fastapi-cache2 = {extras = ["redis"], version = "^0.2.1"}
+redis = "^4.6.0"
 
 
 [build-system]

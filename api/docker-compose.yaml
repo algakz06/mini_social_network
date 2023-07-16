@@ -5,6 +5,13 @@ version: "3"
 #   logs:
 
 services:
+  redis:
+    image: redislabs/redismod
+    ports:
+      - "16379:6379"
+    volumes:
+      - $PWD/data:/data
+
   db:
     image: postgres:14
     restart: always
@@ -33,4 +40,5 @@ services:
       - "3333:3333"
     depends_on:
       - db
+      - redis
 
