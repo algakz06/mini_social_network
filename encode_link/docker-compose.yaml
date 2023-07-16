@@ -1,0 +1,17 @@
+version: "3"
+
+# volumes:
+#   db:
+#   logs:
+
+services:
+ api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    # volumes:
+    #   - "logs:/data"
+    ports:
+      - "2323:2323"
+
