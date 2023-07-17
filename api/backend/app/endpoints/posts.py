@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy import CursorResult
 
 from sqlalchemy.orm import Session
 
@@ -50,7 +51,7 @@ async def create_post(
     """
     Create a post
     """
-    return crud.create_post(db=db, post=post)
+    return crud.create_post(db=db, post=post, user_id=current_user.id)
 
 
 @router.delete("/delete/{post_id}", response_model=response_schemas.Post)
@@ -62,7 +63,17 @@ async def delete_post(
     """
     Delete a post
     """
-    return crud.delete_post(db=db, post_id=post_id)
+    deleting_op = crud.delete_post(
+        db=db,
+        post_id=post_id,
+        user_id=current_user.id,
+    )
+
+    if deleting_op is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="No post for this user found",
+        )
 
 
 @router.put("/update", response_model=response_schemas.Post)

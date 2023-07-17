@@ -42,7 +42,6 @@ class PostCreate(BaseModel):
     Post create schema
     """
 
-    user_id: int
     title: str
     content: str
 
@@ -59,14 +58,17 @@ class ReactionCreate(BaseModel):
     """
 
     post_id: int
-    user_id: int
     reaction_type: str
 
     model_config = {
         "json_schema_extra": {
             "examples": [
-                {"post_id": 1, "user_id": 1, "reaction_type": "like"},
-                {"post_id": 1, "user_id": 1, "reaction_type": "dislike"},
+                {"post_id": 1, "reaction_type": "like"},
+                {"post_id": 1, "reaction_type": "dislike"},
             ]
         }
     }
+
+
+class ReactionDelete(BaseModel):
+    post_id: int
