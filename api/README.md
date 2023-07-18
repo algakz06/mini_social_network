@@ -17,6 +17,7 @@ With this API you can:
 
 ## Features
 - Backend use OAuth2.0 for authorization and authentication
+- Using EmailHunter API to verify is email exisists
 
 ## Usage instractions
 
