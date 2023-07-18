@@ -4,6 +4,7 @@ from pydantic import PostgresDsn, validator
 from pydantic_settings import BaseSettings
 from dotenv import load_dotenv
 
+logger.add("debug.log", format="{time} {level} {message}", level="DEBUG")
 log = logger
 
 
@@ -32,7 +33,7 @@ class Settings(BaseSettings):
     POSTGRES_DB: str
     DATABASE_URI: Optional[PostgresDsn] = None
 
-    REDIS_URI: str = 'redis://redis:6379'
+    REDIS_URI: str = "redis://redis:6379"
     CACHE_EXPIRE: int = 30
 
     @validator("DATABASE_URI", pre=True)

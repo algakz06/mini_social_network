@@ -20,6 +20,7 @@ WORKDIR /app
 COPY poetry.lock pyproject.toml ./
 RUN poetry install
 
+RUN mkdir logs/
 # Run your app
 COPY . .
 CMD [ "poetry", "run", "python", "-m", "app" ]
